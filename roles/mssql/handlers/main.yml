@@ -1,0 +1,10 @@
+# handlers file for mssql
+---
+- name: restart mssql-server
+  become: true
+  systemd:
+    name: mssql-server
+    state: restarted
+    enabled: yes
+  when:
+    - not ansible_check_mode

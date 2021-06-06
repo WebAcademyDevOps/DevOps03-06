@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install python-pip3
+      apt:
+        name: python3-pip
+        state: present
+    - name: "Include mssql"
+      include_role:
+        name: "mssql"
+      vars:
+        mssql_server_databases:
+          - webacademy
+          - 2804

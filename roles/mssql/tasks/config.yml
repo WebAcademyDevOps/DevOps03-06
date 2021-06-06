@@ -1,0 +1,43 @@
+---
+- name: Copy profile.d mssql.sh
+  ansible.builtin.template:
+    src: mssql.sh.j2
+    dest: /etc/profile.d/mssql.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Checking if MSSQL has already been configured
+  ansible.builtin.stat:
+    path: "{{ mssql_server_dir }}/.configured"
+  register: mssql_server_configured_check
+
+- name: Configuring MSSQL
+  ansible.builtin.command: "{{ mssql_server_dir }}/bin/mssql-conf --noprompt setup"
+  environment:
+    ACCEPT_EULA: "y"
+    MSSQL_SA_PASSWORD: "{{ mssql_server_sa_password }}"
+  register: mssql_server_configured
+  when: not mssql_server_configured_check['stat']['exists']
+
+- name: Marking MSSQL as configured # noqa 503
+  ansible.builtin.file:
+    path: "{{ mssql_server_dir }}/.configured"
+    state: touch
+  when: mssql_server_configured['changed']
+
+- name: Copy profile.d mssql.conf
+  ansible.builtin.template:
+    src: mssql.conf.j2
+    dest: /var/opt/mssql/mssql.conf
+    owner: mssql
+    group: mssql
+    mode: '0644'
+  notify: restart mssql-server
+
+- name: Configuring MSSQL agent
+  ansible.builtin.command: "{{ mssql_server_bin_dir }}/mssql-conf set sqlagent.enabled true"
+  environment:
+    MSSQL_SA_PASSWORD: "{{ mssql_server_sa_password }}"
+  when: mssql_server_agent_enabled
+  notify: restart mssql-server

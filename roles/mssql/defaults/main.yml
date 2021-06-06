@@ -1,0 +1,21 @@
+---
+# defaults file for mssql
+
+mssql_microsoft_gpg_url: https://packages.microsoft.com/keys/microsoft.asc
+mssql_server_version: 15.0.4123.1-5
+mssql_server_tools:
+  - mssql-tools
+  - unixodbc-dev
+mssql_server_dir: /opt/mssql
+mssql_server_tools_dir: /opt/mssql-tools
+mssql_server_bin_dir: /opt/mssql/bin
+mssql_server_sa_login: "SA"
+mssql_server_sa_host: "localhost"
+mssql_server_sa_password: "Passwor8!"
+
+mssql_server_pymssql_version: 2.2.1
+
+mssql_server_agent_enabled: true
+
+mssql_server_databases: []
+

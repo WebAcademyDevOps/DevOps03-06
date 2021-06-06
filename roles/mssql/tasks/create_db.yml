@@ -1,0 +1,10 @@
+---
+- name: Create a new database(s)
+  community.general.mssql_db:
+    name: "{{ item }}"
+    state: present
+    login_host: "{{ mssql_server_sa_host }}"
+    login_user: "{{ mssql_server_sa_login }}"
+    login_password: "{{ mssql_server_sa_password }}"
+  loop: "{{ mssql_server_databases }}"
+  when: mssql_server_databases | length != 0

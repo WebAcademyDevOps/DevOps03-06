@@ -1,0 +1,5 @@
+---
+# tasks file for mssql
+- include: install.yml
+- include: config.yml
+- include: create_db.yml

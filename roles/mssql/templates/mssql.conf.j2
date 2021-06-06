@@ -1,0 +1,6 @@
+{{ ansible_managed | comment }}
+[sqlagent]
+enabled = {{ mssql_server_agent_enabled | lower }}
+
+[EULA]
+accepteula = Y

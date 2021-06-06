@@ -1,0 +1,34 @@
+---
+
+- name: Add an Apt signing key, Microsoft
+  ansible.builtin.apt_key:
+    url: "{{ mssql_microsoft_gpg_url }}"
+    state: present
+
+- name: Add Microsoft repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64,armhf,arm64] https://packages.microsoft.com/ubuntu/20.04/mssql-server-2019 focal main
+    state: present
+
+- name: Add Microsoft SQL Tools repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64,armhf,arm64] https://packages.microsoft.com/ubuntu/20.04/prod focal main
+    state: present
+
+- name: Install mssql-server
+  ansible.builtin.package:
+    name: mssql-server={{ mssql_server_version }}
+    state: present
+  environment:
+    ACCEPT_EULA: "y"
+
+- name: Install mssql tools
+  ansible.builtin.package:
+    name: "{{ mssql_server_tools }}"
+    state: present
+  environment:
+    ACCEPT_EULA: "y"
+
+- name: Install pymssql python package on version {{ mssql_server_pymssql_version }}
+  pip:
+    name: "pymssql=={{ mssql_server_pymssql_version }}"
