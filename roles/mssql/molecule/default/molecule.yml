@@ -9,5 +9,9 @@ platforms:
     memory: 2048
 provisioner:
   name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
 verifier:
-  name: ansible
+  name: testinfra
